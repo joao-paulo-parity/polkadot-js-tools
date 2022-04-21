@@ -17,6 +17,9 @@ RUN apt-get install -y nodejs
 # env variable works around gyp install (secp256k1) with root permissions
 RUN NPM_CONFIG_USER=root npm install -g @polkadot/api-cli@VERSION @polkadot/json-serve@VERSION @polkadot/metadata-cmp@VERSION @polkadot/monitor-rpc@VERSION @polkadot/signer-cli@VERSION @polkadot/vanitygen@VERSION
 
+# FIXME: patch CommonJS module resolution
+RUN sed -i '11s/.*/var _util = require("@polkadot\/types\/cjs\/metadata\/util\/index");/' /usr/lib/node_modules/@polkadot/metadata-cmp/cjs/runcli.js
+
 # copy the cli wrapper to this container
 COPY cli.sh .
 
